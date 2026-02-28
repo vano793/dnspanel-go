@@ -214,7 +214,7 @@ nsd:
   enabled: true
 
 default_ttl: 3600
-server_ip: "95.182.116.193"
+server_ip: "127.0.0.1"
 
 dns:
   ns_servers:
