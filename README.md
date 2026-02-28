@@ -3,9 +3,11 @@
 
 **DNS Manager** — это простая и удобная панель управления DNS-зонами на базе NSD, написанная на Go. Позволяет создавать домены, управлять DNS-записями (A, AAAA, CNAME, MX, NS, TXT, SOA), контролировать доступ пользователей и автоматически генерировать файлы зон для NSD.
 
-![Скриншот](screenshot/2026-02-28_17-48-29.png)
-![Скриншот](screenshot/2026-02-28_17-49-59.png)
-![Скриншот](screenshot/2026-02-28_17-50-33.png)
+Фото/Screenshot
+![Авторизация](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-48-29.png?raw=true)
+![Главная](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-49-59.png?raw=true)
+![Управление пользователями](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-50-33.png?raw=true)
+
 
 ---
 
