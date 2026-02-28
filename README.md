@@ -7,6 +7,7 @@
 ![Авторизация](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-48-29.png?raw=true)
 ![Главная](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-49-59.png?raw=true)
 ![Управление пользователями](https://github.com/vano793/dnspanel-go/screenshot/2026-02-28_17-50-33.png?raw=true)
+![Управление пользователями](https://github.com/vano793/dnspanel-go/blob/main/screenshot/2026-02-28_17-48-29.png?raw=true)
 
 
 ---
