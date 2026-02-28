@@ -1,0 +1,46 @@
+# DNS Manager Configuration
+database:
+  path: dns.sqlite
+
+server:
+  port: 8080
+  domain: "dns.pnel.ru"
+  use_domain: false
+
+session:
+  secret: "w96p7vhVoOeCh3mGjvCQQEs6RQD20wDKxZ/E5u7U5FE="
+  secure: false
+  domain: ""
+
+nsd:
+  zone_dir: "./zones/"
+  zones_conf: "./zones.conf"
+  enabled: true
+
+default_ttl: 3600
+server_ip: "95.182.116.193"
+
+admin:
+  email: "admin@example.com"
+
+# Настройки DNS по умолчанию
+dns:
+  ns_servers:
+    - ns1.example.com
+    - ns2.example.com
+  soa:
+    refresh: 7200
+    retry: 3600
+    expire: 1209600
+    minimum: 3600
+  
+logging:
+  level: "info"
+  file: "logs/dns-manager.log"
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  
+security:
+  allow_users_create_ns: false
+  allow_users_create_a: false
