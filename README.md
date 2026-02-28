@@ -33,7 +33,7 @@
 
 ### Вариант 1: Установка из готового бинарного файла
 
-1. Скачайте последнюю версию бинарного файла для вашей архитектуры из раздела [Releases](https://github.com/yourusername/dns-manager/releases).
+1. Скачайте последнюю версию бинарного файла для вашей архитектуры из раздела [Releases](https://github.com/vano793/dns-manager/releases).
 2. Поместите бинарный файл, например, в `/opt/dns-manager/` и сделайте его исполняемым:
    ```bash
    mkdir -p /opt/dns-manager
@@ -57,7 +57,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/yourusername/dns-manager.git
+   git clone https://github.com/vano793/dns-manager.git
    cd dns-manager
    ```
 2. Установите зависимости и соберите проект:
