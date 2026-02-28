@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки - DNS Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    {{template "header" .}}
+    <div class="container-fluid px-4">
+        <h2 class="mb-4"><i class="bi bi-gear me-2"></i>Настройки системы</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <form id="settingsForm">
+                    <h5 class="mb-3">Сервер</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Порт сервера</label>
+                        <input type="text" name="server_port" class="form-control" value="8080">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Домен для входа</label>
+                        <input type="text" name="server_domain" class="form-control" placeholder="dns.example.com">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="use_domain" class="form-check-input" id="useDomain">
+                        <label class="form-check-label" for="useDomain">Использовать домен (без порта)</label>
+                        <small class="text-muted d-block">Требуется настройка прокси (nginx) для перенаправления на порт</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">IP сервера (для A-записей)</label>
+                        <input type="text" name="server_ip" class="form-control" value="95.182.116.193">
+                    </div>
+
+                    <hr>
+                    <h5 class="mb-3">NSD</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Директория зон</label>
+                        <input type="text" name="nsd_zone_dir" class="form-control" placeholder="./zones/">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Файл конфигурации зон</label>
+                        <input type="text" name="nsd_zones_conf" class="form-control" placeholder="./zones.conf">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="nsd_enabled" class="form-check-input" id="nsdEnabled">
+                        <label class="form-check-label" for="nsdEnabled">Включить интеграцию с NSD</label>
+                    </div>
+
+                    <hr>
+                    <h5 class="mb-3">NS сервера (для новых доменов)</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Список NS серверов (каждый с новой строки)</label>
+                        <textarea name="ns_servers" class="form-control" rows="4" placeholder="ns1.example.com&#10;ns2.example.com"></textarea>
+                        <small class="text-muted">Эти сервера будут добавляться как NS записи в каждый новый домен.</small>
+                    </div>
+
+                    <hr>
+                    <h5 class="mb-3">Права пользователей</h5>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="allow_users_create_ns" class="form-check-input" id="allowUsersCreateNS" checked>
+                        <label class="form-check-label" for="allowUsersCreateNS">
+                            Разрешить пользователям создавать NS записи
+                        </label>
+                        <small class="text-muted d-block">Если снять, пользователи не смогут добавлять, редактировать или удалять NS записи</small>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="allow_users_create_a" class="form-check-input" id="allowUsersCreateA" checked>
+                        <label class="form-check-label" for="allowUsersCreateA">
+                            Разрешить пользователям создавать A записи
+                        </label>
+                        <small class="text-muted d-block">Если снять, пользователи не смогут добавлять, редактировать или удалять A записи</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.get('/api/admin/settings', function(settings) {
+                $('input[name="server_port"]').val(settings.server_port);
+                $('input[name="server_domain"]').val(settings.server_domain);
+                $('input[name="use_domain"]').prop('checked', settings.use_domain);
+                $('input[name="server_ip"]').val(settings.server_ip);
+                $('input[name="nsd_zone_dir"]').val(settings.nsd_zone_dir);
+                $('input[name="nsd_zones_conf"]').val(settings.nsd_zones_conf);
+                $('input[name="nsd_enabled"]').prop('checked', settings.nsd_enabled);
+                $('input[name="allow_users_create_ns"]').prop('checked', settings.allow_users_create_ns);
+                $('input[name="allow_users_create_a"]').prop('checked', settings.allow_users_create_a);
+                // Загружаем NS сервера
+                if (settings.ns_servers) {
+                    $('textarea[name="ns_servers"]').val(settings.ns_servers.join('\n'));
+                }
+            });
+
+            $('#settingsForm').submit(function(e) {
+                e.preventDefault();
+                // Преобразуем textarea в массив (разбиваем по строкам, удаляем пустые и обрезаем пробелы)
+                let nsServers = $('textarea[name="ns_servers"]').val()
+                    .split('\n')
+                    .map(s => s.trim())
+                    .filter(s => s.length > 0);
+
+                $.ajax({
+                    url: '/api/admin/settings',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        server_port: $('input[name="server_port"]').val(),
+                        server_domain: $('input[name="server_domain"]').val(),
+                        use_domain: $('input[name="use_domain"]').is(':checked'),
+                        server_ip: $('input[name="server_ip"]').val(),
+                        nsd_zone_dir: $('input[name="nsd_zone_dir"]').val(),
+                        nsd_zones_conf: $('input[name="nsd_zones_conf"]').val(),
+                        nsd_enabled: $('input[name="nsd_enabled"]').is(':checked'),
+                        allow_users_create_ns: $('input[name="allow_users_create_ns"]').is(':checked'),
+                        allow_users_create_a: $('input[name="allow_users_create_a"]').is(':checked'),
+                        ns_servers: nsServers
+                    }),
+                    contentType: 'application/json',
+                    success: function(resp) {
+                        if (resp.success) alert(resp.message);
+                        else alert('Ошибка: ' + resp.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
